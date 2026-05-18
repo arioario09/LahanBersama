@@ -1,16 +1,22 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-// Note: If you fix the Firebase quota, this file will be automatically 
-// updated or you can paste your own config here.
+const envOrThrow = (key: string) => {
+  const value = import.meta.env[key];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+  return value as string;
+};
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBi3MglSjDN0So4w2MPCnhADCgNBDnMG8w",
-  authDomain: "lahanbersama-d4b12.firebaseapp.com",
-  projectId: "lahanbersama-d4b12",
-  storageBucket: "lahanbersama-d4b12.firebasestorage.app",
-  messagingSenderId: "21054832062",
-  appId: "1:21054832062:web:6e016d2b81517528c5cdef"
+  apiKey: envOrThrow("VITE_FIREBASE_API_KEY"),
+  authDomain: envOrThrow("VITE_FIREBASE_AUTH_DOMAIN"),
+  projectId: envOrThrow("VITE_FIREBASE_PROJECT_ID"),
+  storageBucket: envOrThrow("VITE_FIREBASE_STORAGE_BUCKET"),
+  messagingSenderId: envOrThrow("VITE_FIREBASE_MESSAGING_SENDER_ID"),
+  appId: envOrThrow("VITE_FIREBASE_APP_ID"),
 };
 
 const app = initializeApp(firebaseConfig);

@@ -4,7 +4,6 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
-  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -30,6 +29,13 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  const routeForRole = (role?: string) => {
+    if (role === "admin") return "/admin";
+    if (role === "validator") return "/validator";
+    if (role === "petani") return "/";
+    return "/";
+  };
+
   const handleDemoLogin = (role: "petani" | "investor" | "validator") => {
     setLoading(true);
     setError("");
@@ -47,8 +53,15 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/");
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const userDocRef = doc(db, "users", result.user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+      if (userDocSnap.exists()) {
+        const role = userDocSnap.data()?.role;
+        navigate(routeForRole(role), { replace: true });
+      } else {
+        navigate("/register", { replace: true });
+      }
     } catch (err: any) {
       setError("Email atau password salah.");
     } finally {
@@ -68,7 +81,8 @@ export default function LoginPage() {
       if (!userDocSnap.exists()) {
         navigate("/register?provider=google", { replace: true });
       } else {
-        navigate("/");
+        const role = userDocSnap.data()?.role;
+        navigate(routeForRole(role), { replace: true });
       }
     } catch (err: any) {
       console.error("Google sign-in error:", err);
