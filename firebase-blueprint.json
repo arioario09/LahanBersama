@@ -1,0 +1,140 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information and verification status",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "bio": { "type": "string" },
+        "balance": { "type": "number", "description": "Current digital wallet balance" },
+        "role": { "type": "string", "enum": ["petani", "investor", "validator", "admin"] },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "verificationStatus": { "type": "string", "enum": ["unverified", "pending", "verified", "rejected"] },
+        "rejectionReason": { "type": "string" },
+        "ktpPhotoUrl": { "type": "string" },
+        "nik": { "type": "string" }
+      },
+      "required": ["name", "email", "role", "verificationStatus"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Agricultural land project listed for funding",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "fruitType": { "type": "string" },
+        "slotSize": { "type": "number" },
+        "slotPrice": { "type": "number" },
+        "harvestPeriod": { "type": "string" },
+        "location": { "type": "object", "properties": { "lat": { "type": "number" }, "lng": { "type": "number" } } },
+        "status": { "type": "string", "enum": ["draft", "pending", "approved", "completed"] },
+        "totalFunds": { "type": "number" },
+        "isBoosted": { "type": "boolean" },
+        "boostExpiry": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "System alerts for users",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["fund_received", "project_update"] },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Audit": {
+      "title": "Audit",
+      "description": "Weekly progress updates for a project",
+      "type": "object",
+      "properties": {
+        "projectId": { "type": "string" },
+        "description": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Investment": {
+      "title": "Investment",
+      "description": "Investor purchase of land slots",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "projectId": { "type": "string" },
+        "slots": { "type": "number" },
+        "totalPaid": { "type": "number" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Financial records for topups, investments, and withdrawals",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["topup", "invest", "withdraw", "profit"] },
+        "status": { "type": "string", "enum": ["pending", "success"] },
+        "paymentMethod": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "Direct message thread between two users",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "participants": { "type": "array", "items": { "type": "string" } },
+        "lastMessage": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "projectId": { "type": "string", "description": "Optional context for which land is being discussed" }
+      }
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Record of system actions for admin audit",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" },
+        "targetId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Individual message within a chat",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "senderId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "readStatus": { "type": "boolean" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": "User", "description": "User profiles" },
+    "/users/{userId}/favorites/{projectId}": { "schema": "object", "description": "User saved projects" },
+    "/projects/{projectId}": { "schema": "Project", "description": "Agricultural projects" },
+    "/projects/{projectId}/audits/{auditId}": { "schema": "Audit", "description": "Project progress updates" },
+    "/investments/{investmentId}": { "schema": "Investment", "description": "User investments" },
+    "/transactions/{transactionId}": { "schema": "Transaction", "description": "Transaction logs" },
+    "/chats/{chatId}": { "schema": "Chat", "description": "Chat threads" },
+    "/chats/{chatId}/messages/{messageId}": { "schema": "Message", "description": "Messages within a chat" },
+    "/notifications/{notificationId}": { "schema": "Notification", "description": "System notifications" },
+    "/activityLogs/{logId}": { "schema": "ActivityLog", "description": "System activity logs" }
+  }
+}

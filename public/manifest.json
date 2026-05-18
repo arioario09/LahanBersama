@@ -1,0 +1,23 @@
+{
+  "name": "LahanBersama",
+  "short_name": "LahanBersama",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#122B4F",
+  "theme_color": "#00B0A0",
+  "description": "Platform Investasi Lahan Pertanian Bersama",
+  "icons": [
+    {
+      "src": "fav.ico/android-icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "fav.ico/android-icon-192x192.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+    
+  ]
+}
