@@ -71,10 +71,12 @@ export default function LoginPage() {
         navigate("/");
       }
     } catch (err: any) {
-      if (err.code === 'auth/account-exists-with-different-credential') {
-        setError('Akun Google sudah terdaftar dengan metode lain. Silakan login dengan email/password.');
+      if (err.code === "auth/account-exists-with-different-credential") {
+        setError(
+          "Akun Google sudah terdaftar dengan metode lain. Silakan login dengan email/password.",
+        );
       } else {
-        setError('Gagal login dengan Google.');
+        setError("Gagal login dengan Google.");
       }
     } finally {
       setLoading(false);
