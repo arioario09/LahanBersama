@@ -65,7 +65,21 @@ export default function RegisterPage() {
       try {
         await signInWithPopup(auth, new GoogleAuthProvider());
       } catch (err: any) {
-        setError("Silakan login dengan Google terlebih dahulu.");
+        console.error("Google sign-in (register) error:", err);
+        if (err.code === "auth/account-exists-with-different-credential") {
+          setError(
+            "Akun Google sudah terdaftar dengan metode lain. Silakan login dengan email/password.",
+          );
+        } else if (
+          err.code === "auth/popup-blocked" ||
+          err.code === "auth/popup-closed-by-user"
+        ) {
+          setError(
+            "Popup Google diblokir atau ditutup — izinkan popup lalu coba lagi.",
+          );
+        } else {
+          setError(`Gagal masuk dengan Google: ${err.message || err.code}`);
+        }
       } finally {
         setLoading(false);
       }
@@ -124,7 +138,21 @@ export default function RegisterPage() {
       await signInWithPopup(auth, new GoogleAuthProvider());
       navigate("/register?provider=google");
     } catch (err: any) {
-      setError("Gagal masuk dengan Google. Coba lagi.");
+      console.error("Google register popup error:", err);
+      if (err.code === "auth/account-exists-with-different-credential") {
+        setError(
+          "Akun Google sudah terdaftar dengan metode lain. Silakan login dengan email/password.",
+        );
+      } else if (
+        err.code === "auth/popup-blocked" ||
+        err.code === "auth/popup-closed-by-user"
+      ) {
+        setError(
+          "Popup Google diblokir atau ditutup — izinkan popup lalu coba lagi.",
+        );
+      } else {
+        setError(`Gagal masuk dengan Google: ${err.message || err.code}`);
+      }
     } finally {
       setLoading(false);
     }
