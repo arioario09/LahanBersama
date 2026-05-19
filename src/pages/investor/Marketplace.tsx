@@ -15,6 +15,8 @@ interface Project {
   status: string;
   totalFunds: number;
   isBoosted?: boolean;
+  imageUrl?: string;
+  address?: string;
 }
 
 export default function Marketplace() {
@@ -122,8 +124,8 @@ export default function Marketplace() {
               >
                 <div className="relative h-48 bg-navy/5 overflow-hidden">
                   <img 
-                    src={`https://api.dicebear.com/7.x/identicon/svg?seed=${project.id}`} 
-                    className="w-full h-full object-cover opacity-60 transition-transform group-hover:scale-110" 
+                    src={project.imageUrl || `https://api.dicebear.com/7.x/identicon/svg?seed=${project.id}`} 
+                    className="w-full h-full object-cover opacity-80 transition-transform group-hover:scale-110" 
                     alt={project.title}
                   />
                   <div className="absolute top-4 left-4 flex gap-2">

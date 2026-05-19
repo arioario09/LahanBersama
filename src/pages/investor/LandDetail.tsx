@@ -86,8 +86,8 @@ export default function LandDetail() {
     <div className="bg-bg-gray min-h-screen">
       <div className="relative h-64 sm:h-80 bg-navy overflow-hidden">
         <img 
-          src={`https://api.dicebear.com/7.x/identicon/svg?seed=${project.id}`} 
-          className="w-full h-full object-cover opacity-40" 
+          src={project.imageUrl || `https://api.dicebear.com/7.x/identicon/svg?seed=${project.id}`} 
+          className="w-full h-full object-cover opacity-60" 
           alt={project.title}
         />
         <button 
@@ -118,9 +118,11 @@ export default function LandDetail() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-4">
                  <div className="flex items-center gap-3">
                     <div className="p-2 bg-bg-gray rounded-xl"><MapPin className="h-5 w-5 text-blue-gray" /></div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                        <p className="text-[10px] font-bold text-blue-gray uppercase">Lokasi</p>
-                       <p className="text-sm font-bold truncate">Jawa Barat</p>
+                       <p className="text-xs sm:text-sm font-bold truncate" title={project.address || 'Jawa Barat'}>
+                         {project.address || 'Jawa Barat'}
+                       </p>
                     </div>
                  </div>
                  <div className="flex items-center gap-3">

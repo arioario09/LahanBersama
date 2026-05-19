@@ -165,6 +165,16 @@ export default function UserManager() {
     }
   };
 
+  const handleOpenEdit = (user: any) => {
+    setEditingUser(user);
+    setEditFormData({
+      name: user.name || "",
+      email: user.email || "",
+      role: user.role || "investor",
+    });
+    setShowEditModal(true);
+  };
+
   const handleEditUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser || !editingUser) return;

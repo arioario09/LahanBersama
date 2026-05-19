@@ -208,7 +208,7 @@ export default function LoginPage() {
             MASUK DENGAN GOOGLE
           </button>
 
-          {/* Demo Login Buttons
+          {/* Demo Login Buttons */}
           <div className="mt-8 grid grid-cols-2 gap-4">
             <button
               onClick={() => handleDemoLogin("petani")}
@@ -253,7 +253,7 @@ export default function LoginPage() {
                 Panel Validator (Reviewer)
               </span>
             </button>
-          </div> */}
+          </div>
 
           <p className="text-blue-gray mt-12 text-center text-sm font-medium">
             Belum punya akun?{" "}
