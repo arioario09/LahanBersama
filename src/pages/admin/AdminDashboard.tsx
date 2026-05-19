@@ -77,7 +77,7 @@ export default function AdminDashboard() {
           <Logo className="w-10 h-10 flex-shrink-0" iconSize="h-5 w-5" />
           {isSidebarOpen && (
             <span className="text-xl font-bold tracking-tight whitespace-nowrap">
-              Admin LB
+              Dashboard <br />Lahan Bersama
             </span>
           )}
           <button
