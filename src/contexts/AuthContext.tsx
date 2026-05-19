@@ -1,13 +1,13 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { 
-  onAuthStateChanged, 
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  onAuthStateChanged,
   User as FirebaseUser,
-  signOut as firebaseSignOut
-} from 'firebase/auth';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
+  signOut as firebaseSignOut,
+} from "firebase/auth";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { auth, db } from "../lib/firebase";
 
-export type UserRole = 'petani' | 'investor' | 'admin' | 'validator';
+export type UserRole = "petani" | "investor" | "admin" | "validator";
 
 export interface UserProfile {
   id: string;
@@ -16,7 +16,7 @@ export interface UserProfile {
   role: UserRole;
   status: string;
   createdAt: string;
-  verificationStatus: 'unverified' | 'pending' | 'verified' | 'rejected';
+  verificationStatus: "unverified" | "pending" | "verified" | "rejected";
   rejectionReason?: string;
   ktpPhotoUrl: string;
   nik: string;
@@ -30,6 +30,10 @@ interface AuthContextType {
   loading: boolean;
   signOut: () => Promise<void>;
   setMockProfile: (role: UserRole) => void;
+  restoreAdminSession: (
+    adminUser: FirebaseUser,
+    adminProfile: UserProfile,
+  ) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -46,21 +50,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
-      
+
       if (firebaseUser) {
         // Subscribe to profile changes
-        const docRef = doc(db, 'users', firebaseUser.uid);
-        const unsubscribeProfile = onSnapshot(docRef, (docSnap) => {
-          if (docSnap.exists()) {
-            setProfile({ id: docSnap.id, ...docSnap.data() } as UserProfile);
-          } else {
-            setProfile(null);
-          }
-          setLoading(false);
-        }, (error) => {
-          console.error("Error fetching profile:", error);
-          setLoading(false);
-        });
+        const docRef = doc(db, "users", firebaseUser.uid);
+        const unsubscribeProfile = onSnapshot(
+          docRef,
+          (docSnap) => {
+            if (docSnap.exists()) {
+              setProfile({ id: docSnap.id, ...docSnap.data() } as UserProfile);
+            } else {
+              setProfile(null);
+            }
+            setLoading(false);
+          },
+          (error) => {
+            console.error("Error fetching profile:", error);
+            setLoading(false);
+          },
+        );
 
         return () => unsubscribeProfile();
       } else {
@@ -91,18 +99,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       name: `${role.charAt(0).toUpperCase() + role.slice(1)} Demo`,
       email: `${role}@demo.com`,
       role: role,
-      status: 'active',
+      status: "active",
       createdAt: new Date().toISOString(),
-      verificationStatus: 'verified',
+      verificationStatus: "verified",
       bio: `Akun demo ${role} untuk eksplorasi platform LahanBersama.`,
-      nik: '1234567890',
-      ktpPhotoUrl: '',
-      balance: 1500000
+      nik: "1234567890",
+      ktpPhotoUrl: "",
+      balance: 1500000,
     });
   };
 
+  const restoreAdminSession = (
+    adminUser: FirebaseUser,
+    adminProfile: UserProfile,
+  ) => {
+    setUser(adminUser);
+    setProfile(adminProfile);
+    setLoading(false);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signOut, setMockProfile }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        profile,
+        loading,
+        signOut,
+        setMockProfile,
+        restoreAdminSession,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -111,7 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

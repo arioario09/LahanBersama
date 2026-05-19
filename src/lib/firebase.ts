@@ -2,8 +2,9 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
+const __env = (import.meta as any).env as Record<string, string | undefined>;
 const envOrThrow = (key: string) => {
-  const value = import.meta.env[key];
+  const value = __env[key];
   if (!value) {
     throw new Error(`Missing required environment variable: ${key}`);
   }
