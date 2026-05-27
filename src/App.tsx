@@ -12,6 +12,7 @@ import {
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
+import LandingPage from "./pages/LandingPage";
 import RegisterPage from "./pages/RegisterPage";
 import VerificationPage from "./pages/VerificationPage";
 import Layout from "./components/layout/Layout";
@@ -63,6 +64,7 @@ export default function App() {
         <PWAInstallPrompt />
         <Routes>
           {/* Public Routes */}
+          <Route path="/landing" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 

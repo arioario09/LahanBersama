@@ -19,6 +19,9 @@ export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
   }
 
   if (!user) {
+    if (location.pathname === "/") {
+      return <Navigate to="/landing" replace />;
+    }
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
